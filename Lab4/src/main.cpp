@@ -9,6 +9,7 @@ void setup() {
   //set output to enable pullup resistor
     PORTD |= (1 << BUTTON);
 
+  // Set pinmode for LED as output
     DDRD |= 1 << LED;
 
     Serial.begin(9600);
