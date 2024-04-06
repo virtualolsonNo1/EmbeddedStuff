@@ -1,7 +1,7 @@
 #include <Arduino.h>
 
-#define BUTTON 2
-#define LED 3
+#define BUTTON 3
+#define LED 4
 
 void setup() {
   //Set pinmode for Button as input
