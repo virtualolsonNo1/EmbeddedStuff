@@ -1,3 +1,22 @@
+/*--------------------------------------------------------------------
+Name:   Carl Olson
+Date:   April 10th, 2024 
+Course: CSCE 336 Embedded Systems (Spring 2024) 
+File:   main.cpp
+HW/Lab: Lab 4, Button Interrupt
+
+Purp: Button Interrupt code for Lab 4 to introduce students to interrupts and ISRs
+
+Doc:  NA
+
+Academic Integrity Statement: I certify that, while others may have 
+assisted me in brain storming, debugging and validating this program, 
+the program itself is my own work. I understand that submitting code 
+which is the work of other individuals is a violation of the honor   
+code.  I also understand that if I knowingly give my original work to 
+another individual is also a violation of the honor code.
+--------------------------------------------------------------------*/
+
 #include <Arduino.h>
 
 #define BUTTON 3
@@ -30,6 +49,7 @@ ISR(INT1_vect){
 }
 
 void buttonPress() {
+  // if the button is high (i.e. not pressed), enter if statement and turn off LED
   if (!(PIND & (1 << BUTTON))) {
   Serial.println("LED ON!!!");
   PORTD |= (1 << LED);
@@ -40,6 +60,7 @@ void buttonPress() {
 }
 
 void buttonPressInterruptNotWorkingCorrect() {
+  // if the button is high (i.e. not pressed), enter if statement and turn off LED
   if (PIND & (1 << BUTTON)) {
     asm volatile("nop");
     asm volatile("nop");
@@ -53,7 +74,9 @@ void buttonPressInterruptNotWorkingCorrect() {
 }
 
 void solution1() {
+  // if the button is high (i.e. not pressed), enter if statement and turn off LED
   if (PIND & (1 << BUTTON)) {
+    // disable interrupts
     cli();
     asm volatile("nop");
     asm volatile("nop");
@@ -62,13 +85,16 @@ void solution1() {
     asm volatile("nop");
     asm volatile("nop");
     PORTD &= ~(1 << LED);
+    // enable interrupts
     sei();
   }
   
 }
 
 void solution2() {
+  // set EICRA to 0 to trigger when pin goes low
   EICRA = 0x0;
+  // if the button is high (i.e. not pressed), enter if statement and turn off LED
   if (PIND & (1 << BUTTON)) {
     asm volatile("nop");
     asm volatile("nop");
