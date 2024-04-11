@@ -39,7 +39,7 @@ void buttonPress() {
   }
 }
 
-void buttonPress2() {
+void buttonPressInterruptNotWorkingCorrect() {
   if (PIND & (1 << BUTTON)) {
     asm volatile("nop");
     asm volatile("nop");
@@ -47,14 +47,14 @@ void buttonPress2() {
     asm volatile("nop");
     asm volatile("nop");
     asm volatile("nop");
-    asm volatile("nop");
-    asm volatile("nop");
-    asm volatile("nop");
-    asm volatile("nop");
-    asm volatile("nop");
-    asm volatile("nop");
-    asm volatile("nop");
-    asm volatile("nop");
+    PORTD &= ~(1 << LED);
+  }
+  
+}
+
+void solution1() {
+  if (PIND & (1 << BUTTON)) {
+    cli();
     asm volatile("nop");
     asm volatile("nop");
     asm volatile("nop");
@@ -62,13 +62,28 @@ void buttonPress2() {
     asm volatile("nop");
     asm volatile("nop");
     PORTD &= ~(1 << LED);
-    // Serial.println(EIFR);
+    sei();
   }
   
 }
 
+void solution2() {
+  EICRA = 0x0;
+  if (PIND & (1 << BUTTON)) {
+    asm volatile("nop");
+    asm volatile("nop");
+    asm volatile("nop");
+    asm volatile("nop");
+    asm volatile("nop");
+    asm volatile("nop");
+    PORTD &= ~(1 << LED);
+  }
+}
+
 void loop() {
   // put your main code here, to run repeatedly:
-  buttonPress2();
+  // buttonPress();
+  // solution1();
+  solution2();
 }
 
