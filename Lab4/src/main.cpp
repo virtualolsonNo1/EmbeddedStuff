@@ -12,9 +12,21 @@ void setup() {
   // Set pinmode for LED as output
     DDRD |= 1 << LED;
 
+    // enable interrupt on falling edge
+    EICRA = 0x8;
+    // enable int1 interrupt generation
+    EIMSK = 0x2;
+    // clear interrupt flags
+    EIFR = 0x0;
+
     Serial.begin(9600);
     Serial.println("Setup Complete!!!");
 
+}
+
+ISR(INT1_vect){
+//INT1 interrupt handling code goes here
+  PORTD |= (1 << LED);
 }
 
 void buttonPress() {
@@ -25,11 +37,38 @@ void buttonPress() {
     PORTD &= ~(1 << LED);
     Serial.println("LED OFF!!!");
   }
+}
+
+void buttonPress2() {
+  if (PIND & (1 << BUTTON)) {
+    asm volatile("nop");
+    asm volatile("nop");
+    asm volatile("nop");
+    asm volatile("nop");
+    asm volatile("nop");
+    asm volatile("nop");
+    asm volatile("nop");
+    asm volatile("nop");
+    asm volatile("nop");
+    asm volatile("nop");
+    asm volatile("nop");
+    asm volatile("nop");
+    asm volatile("nop");
+    asm volatile("nop");
+    asm volatile("nop");
+    asm volatile("nop");
+    asm volatile("nop");
+    asm volatile("nop");
+    asm volatile("nop");
+    asm volatile("nop");
+    PORTD &= ~(1 << LED);
+    // Serial.println(EIFR);
+  }
   
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-  buttonPress();
+  buttonPress2();
 }
 
